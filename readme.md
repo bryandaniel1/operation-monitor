@@ -1,8 +1,21 @@
-# chat-room
+# operation-monitor
 
 ## System Overview
 
 This set of enterprise applications provides example usages of web services and message queues. The Geolocator application is a web service which provides geographic location data using IP address input in web service calls to publicly available web services.  The Geotracer application, similar to the Geolocator, is a web service providing geographic data using publicly available web services.  The Geotracer, moreover, displays data for a trace route when given a destination URL. Both the Geolocator and Geotracer relay these web service events to a message queue monitored by the Operation Monitor application.
+
+<figure>
+  <img src="img/GeoLocator.png" alt="GeoLocator"/>
+  <figcaption>GeoLocator</figcaption>
+</figure>
+<figure>
+  <img src="img/GeoTracer.png" alt="GeoTracer"/>
+  <figcaption>GeoTracer</figcaption>
+</figure>
+<figure>
+  <img src="img/Operation-Monitor.png" alt="Operation Monitor"/>
+  <figcaption>Operation Monitor</figcaption>
+</figure>
 
 ## Purpose
 

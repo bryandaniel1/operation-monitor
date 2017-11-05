@@ -40,17 +40,27 @@ $(document).ready(function () {
      * @param {type} data
      */
     function showData(data) {
+        var countryCode = data.countryCode === "" ? "*" : data.countryCode;
+        var countryName = data.countryName === "" ? "*" : data.countryName;
+        var regionCode = data.regionCode === "" ? "*" : data.regionCode;
+        var regionName = data.regionName === "" ? "*" : data.regionName;
+        var city = data.city === "" ? "*" : data.city;
+        var zipCode = data.zipCode === "" ? "*" : data.zipCode;
+        var timeZone = data.timeZone === "" ? "*" : data.timeZone;
+        var latitude = data.latitude === "" ? "*" : data.latitude;
+        var longitude = data.longitude === "" ? "*" : data.longitude;
+        var metroCode = data.metroCode === "" ? "*" : data.metroCode;
         $("#ipAddressDiv").append(data.ipAddress);
-        $("#countryCodeDiv").append(data.countryCode);
-        $("#countryNameDiv").append(data.countryName);
-        $("#regionCodeDiv").append(data.regionCode);
-        $("#regionNameDiv").append(data.regionName);
-        $("#cityDiv").append(data.city);
-        $("#zipCodeDiv").append(data.zipCode);
-        $("#timeZoneDiv").append(data.timeZone);
-        $("#latitudeDiv").append(data.latitude);
-        $("#longitudeDiv").append(data.longitude);
-        $("#metroCodeDiv").append(data.metroCode);
+        $("#countryCodeDiv").append(countryCode);
+        $("#countryNameDiv").append(countryName);
+        $("#regionCodeDiv").append(regionCode);
+        $("#regionNameDiv").append(regionName);
+        $("#cityDiv").append(city);
+        $("#zipCodeDiv").append(zipCode);
+        $("#timeZoneDiv").append(timeZone);
+        $("#latitudeDiv").append(latitude);
+        $("#longitudeDiv").append(longitude);
+        $("#metroCodeDiv").append(metroCode);
         $("#dataSection").show();
     }
 
