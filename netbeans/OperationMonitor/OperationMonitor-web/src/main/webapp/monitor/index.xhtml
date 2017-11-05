@@ -1,0 +1,92 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="content" >
+        <section id="formSection" class="ui-widget-header">
+            <h2 id="searchHeader">Operation Monitor</h2>
+            <h:form id="monitorForm">
+                <label for="eventType">Search an event type:</label>
+                <h:selectOneMenu id="eventType" value="#{monitorBean.selectedEventType}" required="true">
+                    <f:selectItem itemLabel="" itemValue="" noSelectionOption="" />
+                    <f:selectItems value="#{monitorBean.eventTypes}" var="eventType"
+                                   itemValue="#{eventType}" itemLabel="#{eventType.label}" />
+                </h:selectOneMenu>
+                <label for="date">Select a date:</label>
+                <h:inputText class="datepicker" id="date" value="#{monitorBean.selectedDate}" required="true" >
+                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                </h:inputText>
+                <h:commandButton styleClass="submitButton" value="Submit" action="#{monitorBean.search}" />
+            </h:form>
+        </section>
+        <h:panelGroup id="results">
+            <h:messages errorClass="ui-state-error"/>
+            <h:panelGroup styleClass="resultTable" rendered="#{not empty monitorBean.geolocationSearchEvents}">
+                <h3>Geolocation Search Events for 
+                    <h:outputText value="#{monitorBean.selectedDate}">
+                        <f:convertDateTime type="date" dateStyle="medium"/>
+                    </h:outputText>
+                </h3>
+                <h:form>
+                    <h:dataTable id="searchEventTable" styleClass="eventTable display responsive" width="100%" value="#{monitorBean.geolocationSearchEvents}" var="event">
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Time Searched" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.timeSearched}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Time Elapsed" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.timeElapsed}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Latitude" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.location.latitude}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Longitude" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.location.longitude}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Detailed View" styleClass="dataTableHeader"/></f:facet>
+                            <h:commandButton styleClass="button ui-button" style="font-size:0.95em;" value="View Event" action="#{detailsBean.viewSearchEvent}" >
+                                <f:setPropertyActionListener target="#{detailsBean.selectedSearchEvent}" 
+                                                             value="${event}" />
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </h:panelGroup>            
+            <h:panelGroup styleClass="resultTable" rendered="#{not empty monitorBean.geotracerEvents}">
+                <h3>Geotracer Events for 
+                    <h:outputText value="#{monitorBean.selectedDate}">
+                        <f:convertDateTime type="date" dateStyle="medium"/>
+                    </h:outputText>
+                </h3>
+                <h:form>
+                    <h:dataTable id="tracerEventTable" styleClass="eventTable display responsive" width="100%" value="#{monitorBean.geotracerEvents}" var="event">
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Time Executed" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.timeExecuted}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Time Elapsed" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.timeElapsed}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="From IP Address" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.tracerHopList[0].hopSearch.search.location.ipAddress}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Detailed View" styleClass="dataTableHeader"/></f:facet>
+                            <h:commandButton styleClass="button ui-button" style="font-size:0.95em;" value="View Event" action="#{detailsBean.viewTracerEvent}" >
+                                <f:setPropertyActionListener target="#{detailsBean.selectedTracerEvent}" 
+                                                             value="${event}" />
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>                
+                </h:form>
+            </h:panelGroup>            
+        </h:panelGroup>
+    </ui:define>   
+</ui:composition>

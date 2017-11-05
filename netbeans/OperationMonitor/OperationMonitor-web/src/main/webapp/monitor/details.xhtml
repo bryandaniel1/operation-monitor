@@ -1,0 +1,58 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="content" >
+        <section id="formSection" class="ui-widget-header">
+            <h2 id="searchHeader">Operation Monitor</h2>
+            <input type="hidden" id="searchEventLocation" value="#{detailsBean.searchLocationString}" />
+            <input type="hidden" id="hopLocations" value="#{detailsBean.hopLocationsString}" />
+            <h:form>
+                <h:commandLink action="index">Back to search results</h:commandLink>                            
+            </h:form>
+        </section>        
+        <section id="mapSection">
+            <h3>Map</h3>
+            <div id="map" style="height: 500px; width:100%; position:absolute"></div>
+        </section>
+        <div style="height: 500px; float: left"></div>
+        <div id="message"></div>
+        <section id="dataSection">
+            <h3>Data</h3>
+            <c:if test="#{not empty detailsBean.selectedSearchEvent}">
+                <div class="dataNames">
+                    <div class="ipAddressLabel">IP address:&#160;</div>
+                    <div class="countryCodeLabel">Country Code:&#160;</div>
+                    <div class="countryNameLabel">Country Name:&#160;</div>
+                    <div class="regionCodeLabel">Region Code:&#160;</div>
+                    <div class="regionNameLabel">Region Name:&#160;</div>
+                    <div class="cityLabel">City:&#160;</div>
+                    <div class="zipCodeLabel">Zip Code:&#160;</div>
+                    <div class="timeZoneLabel">Time Zone:&#160;</div>
+                    <div class="latitudeLabel">Latitude:&#160;</div>
+                    <div class="longitudeLabel">Longitude:&#160;</div>
+                    <div class="metroCodeLabel">Metro Code:&#160;</div>
+                </div>
+                <div class="dataValues">
+                    <div class="ipAddressDiv"></div>
+                    <div class="countryCodeDiv"></div>
+                    <div class="countryNameDiv"></div>
+                    <div class="regionCodeDiv"></div>
+                    <div class="regionNameDiv"></div>
+                    <div class="cityDiv"></div>
+                    <div class="zipCodeDiv"></div>
+                    <div class="timeZoneDiv"></div>
+                    <div class="latitudeDiv"></div>
+                    <div class="longitudeDiv"></div>
+                    <div class="metroCodeDiv"></div>
+                </div>
+            </c:if>
+            <c:if test="#{not empty detailsBean.selectedTracerEvent}">
+                <div id="dataAccordion"></div>
+            </c:if>
+        </section>        
+    </ui:define>
+</ui:composition>
+

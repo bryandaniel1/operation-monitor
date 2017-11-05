@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Operation Monitor</title>
+        <h:outputStylesheet library="css" name="main.css" />
+        <link href="https://code.jquery.com/ui/1.12.1/themes/overcast/jquery-ui.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css"/>
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>        
+        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/r-2.2.0/datatables.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtNtslVfZQI548LIPxG1-DezaM2ndHkmo"
+        async="async" defer="defer"></script>
+        <h:outputScript library="js" name="main.js"/>
+    </h:head>
+    <h:body>
+        <section id="pagecontent">
+            <h:panelGroup id="userLinks">
+                <h:panelGroup rendered="#{not empty user}">
+                    Hello, #{user.firstName}
+                    <h:panelGroup rendered="#{facesContext.externalContext.isUserInRole('administrator')}">
+                        <h:form>
+                            <h:commandLink action="exitAdministration">Return to Monitor Page</h:commandLink>                            
+                        </h:form>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <h:form>
+                            <h:commandLink action="#{administratorBean.monitorBean.signOut}">Sign Out</h:commandLink>                            
+                        </h:form>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:panelGroup>
+            <section id="adminSection" class="ui-widget-header">
+                <h2 id="searchHeader">Administration</h2>
+            </section>
+            <section id="userDetailsSection">
+                <c:forEach items="#{administratorBean.users}" var="user">
+                    <div id="#{user.username}" class="dialog">
+                        <h1>User Details:</h1>
+                        <div id="users" class="ui-widget ui-widget-content">
+                            <div class="userDataNames">
+                                <div>First Name:&#160;</div>
+                                <div>Last Name:&#160;</div>
+                                <div>Username:&#160;</div>
+                                <div>Roles:&#160;</div>
+                                <div>Street:&#160;</div>
+                                <div>City:&#160;</div>
+                                <div>State:&#160;</div>
+                                <div>Zip Code:&#160;</div>
+                                <div>Country:&#160;</div>
+                            </div>
+                            <div class="userDataValues">
+                                <div>${user.firstName}</div>
+                                <div>${user.lastName}</div>
+                                <div>${user.username}</div>
+                                <div>
+                                    <c:forEach items="#{user.userRoleList}" var="userRole">
+                                        ${userRole.userRolePK.role}&#160;
+                                    </c:forEach>
+                                </div>
+                                <div>${user.userContact.street}</div>
+                                <div>${user.userContact.city}</div>
+                                <div>${user.userContact.region.regionCode}</div>
+                                <div>${user.userContact.zipCode}</div>
+                                <div>${user.userContact.country.countryCode}</div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </section>
+            <h:panelGroup id="users">
+                <h:panelGroup styleClass="resultTable" rendered="#{not empty administratorBean.users}">
+                    <h3>Operation Monitor Users</h3>
+                    <h:dataTable id="userTable" styleClass="userTable display responsive" width="100%" value="#{administratorBean.users}" var="user">
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="First Name" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${user.firstName}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Last Name" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${user.lastName}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Username" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${user.username}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="City" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${user.userContact.city}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Detailed View" styleClass="dataTableHeader"/></f:facet>
+                            <button class="dialog-button button ui-button" 
+                                    onclick="showUserDetails('#{user.username}')">User Details</button>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </section>
+    </h:body>
+</html>
