@@ -25,59 +25,59 @@ CREATE TABLE Geolocation (
 	ip_address VARCHAR(50) NOT NULL, 
 	latitude DECIMAL(6,4) NOT NULL,
 	longitude DECIMAL(7,4) NOT NULL, 
-    city VARCHAR(50),
-    zip_code VARCHAR(12), 
-    country VARCHAR(3), 
-    region VARCHAR(3), 
-    time_zone VARCHAR(50), 
-    metro_code INT, 
+	city VARCHAR(50),
+	zip_code VARCHAR(12), 
+	country VARCHAR(3), 
+	region VARCHAR(3), 
+	time_zone VARCHAR(50), 
+	metro_code INT, 
 	FOREIGN KEY (country) 
 	REFERENCES Country (country_code), 
 	FOREIGN KEY (region) 
 	REFERENCES Region (region_code), 
-    CONSTRAINT UK_ip_lat_long 
-    UNIQUE KEY(ip_address, latitude, longitude), 
+	CONSTRAINT UK_ip_lat_long 
+	UNIQUE KEY(ip_address, latitude, longitude), 
 	CONSTRAINT PK_location_id PRIMARY KEY(location_id)
 );
 
 CREATE TABLE GeolocationSearchEvent (
 	search_id BIGINT NOT NULL AUTO_INCREMENT, 
-    time_searched DATETIME NOT NULL, 
-    time_elapsed BIGINT NOT NULL, 
-    location BIGINT NOT NULL, 
-    FOREIGN KEY (location) 
+	time_searched DATETIME NOT NULL, 
+	time_elapsed BIGINT NOT NULL, 
+	location BIGINT NOT NULL, 
+	FOREIGN KEY (location) 
 	REFERENCES Geolocation (location_id), 
-    CONSTRAINT PK_search_id PRIMARY KEY(search_id)
+	CONSTRAINT PK_search_id PRIMARY KEY(search_id)
 );
 
 CREATE TABLE GeotracerEvent (
 	tracer_id BIGINT NOT NULL AUTO_INCREMENT, 
-    time_executed DATETIME NOT NULL, 
-    time_elapsed BIGINT NOT NULL,  
-    CONSTRAINT PK_tracer_id PRIMARY KEY(tracer_id)
+	time_executed DATETIME NOT NULL, 
+	time_elapsed BIGINT NOT NULL,  
+	CONSTRAINT PK_tracer_id PRIMARY KEY(tracer_id)
 );
 
 CREATE TABLE TracerHop (
 	hop_id BIGINT NOT NULL AUTO_INCREMENT, 
-    tracer BIGINT NOT NULL, 
-    hop_order BIGINT NOT NULL, 
-    FOREIGN KEY (tracer) 
+	tracer BIGINT NOT NULL, 
+	hop_order BIGINT NOT NULL, 
+	FOREIGN KEY (tracer) 
 	REFERENCES GeotracerEvent (tracer_id), 
-    CONSTRAINT UK_tracer_hop_order 
-    UNIQUE KEY(tracer, hop_order),  
-    CONSTRAINT PK_hop_id PRIMARY KEY(hop_id)
+	CONSTRAINT UK_tracer_hop_order 
+	UNIQUE KEY(tracer, hop_order),  
+	CONSTRAINT PK_hop_id PRIMARY KEY(hop_id)
 );
 
 CREATE TABLE HopSearch (
 	hop BIGINT NOT NULL, 
-    search BIGINT NOT NULL, 
-    FOREIGN KEY (hop) 
+	search BIGINT NOT NULL, 
+	FOREIGN KEY (hop) 
 	REFERENCES TracerHop (hop_id), 
 	FOREIGN KEY (search) 
 	REFERENCES GeolocationSearchEvent (search_id), 
-    CONSTRAINT UK_hop_search 
-    UNIQUE KEY(search),  
-    CONSTRAINT PK_hop_search PRIMARY KEY(hop)
+	CONSTRAINT UK_hop_search 
+	UNIQUE KEY(search),  
+	CONSTRAINT PK_hop_search PRIMARY KEY(hop)
 );
 
 CREATE TABLE GeolocationsUser (
@@ -85,15 +85,15 @@ CREATE TABLE GeolocationsUser (
 	first_name VARCHAR(50) NOT NULL, 
 	last_name VARCHAR(50) NOT NULL, 
 	password VARCHAR(60) NOT NULL,
-    CONSTRAINT PK_username PRIMARY KEY(username)
+	CONSTRAINT PK_username PRIMARY KEY(username)
 );
 
 CREATE TABLE UserRole (
 	username VARCHAR(50) NOT NULL, 
 	role VARCHAR(50) NOT NULL, 
-    FOREIGN KEY (username) 
+	FOREIGN KEY (username) 
 	REFERENCES GeolocationsUser (username), 
-    CONSTRAINT PK_username_role PRIMARY KEY(username, role)
+	CONSTRAINT PK_username_role PRIMARY KEY(username, role)
 );
 
 CREATE TABLE UserContact (
@@ -105,9 +105,9 @@ CREATE TABLE UserContact (
 	country VARCHAR(3) NOT NULL, 
 	FOREIGN KEY (username) 
 	REFERENCES GeolocationsUser (username), 
-    FOREIGN KEY (region) 
+	FOREIGN KEY (region) 
 	REFERENCES Region (region_code), 
-    FOREIGN KEY (country) 
+	FOREIGN KEY (country) 
 	REFERENCES Country (country_code), 
 	CONSTRAINT PK_user_contact_id PRIMARY KEY(username)
 );
