@@ -154,7 +154,7 @@ These applications are built with Maven, so all JAR dependecies are specified in
 
 **a)** These applications can be run on the GlassFish Server from within the NetBeans IDE by  right-clicking the EAR project node and selecting "Run".
 
-**b)** View the applications by pointing the web browser to https://localhost:8484/{AppName} for a connection with SSL/TLS implemented.  Otherwise, comment out the web module security constraint in {AppName}/WEB-INF/web.xml and point the browser to http://localhost:8080/{AppName}.
+**b)** View the Operation Monitor application by pointing the web browser to https://localhost:8484/OperationMonitor-web for a connection with SSL/TLS implemented.  Otherwise, comment out the web module security constraint in /WEB-INF/web.xml and point the browser to http://localhost:8080/OperationMonitor-web. The applications, GeoLocator and GeoTracer, do not have this security constraint.
 	
 
 ### Section F - notes
@@ -170,6 +170,6 @@ These applications are built with Maven, so all JAR dependecies are specified in
 
  - To utilize SSL/TLS on localhost, a self-signed certificate is required.  With a self-signed certificate created, access the running application by SSL/TLS by pointing a web browser to https://localhost:8484/{AppName}.
 
- - Otherwise, comment out the application's security constraint in diabetesregistry/WEB-INF/web.xml and access the running application by pointing a web browser to http://localhost:8080/{AppName}.  The chat.js file in the web project will also need to be modified to change the WebSocket protocol from "wss" to "ws" and the port from "8484" to "8080".
+ - Otherwise, comment out the application's security constraint in /WEB-INF/web.xml of OperationMonitor-web and access the running application by pointing a web browser to http://localhost:8080/{AppName}.
 
 
