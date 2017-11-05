@@ -44,7 +44,7 @@ public class EventPropagator {
     /**
      * This method fires the search event to be handled by whatever listeners
      * are waiting for it. The method is executed asynchronously in case the
-     * observer method(s) handling the event are long-running.
+     * observer methods handling the event are long-running.
      *
      * @param geolocationSearchEvent the geographic location data search event
      */

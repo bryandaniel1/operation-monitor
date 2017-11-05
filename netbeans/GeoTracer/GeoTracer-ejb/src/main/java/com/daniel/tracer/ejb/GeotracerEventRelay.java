@@ -43,8 +43,8 @@ public class GeotracerEventRelay {
 
     /**
      * This method fires the tracer event to be handled by the listener(s) for
- the GeotracerEventResult. The method is executed asynchronously in case the
-     * observer method(s) handling the event are long-running.
+     * the GeotracerEventResult. The method is executed asynchronously in case
+     * the observer methods handling the event are long-running.
      *
      * @param geotracerEvent the tracer event
      */
