@@ -6,16 +6,19 @@ This set of enterprise applications provides example usages of web services and 
 
 <figure>
   <img src="img/GeoLocator.png" alt="GeoLocator"/>
-  <figcaption>GeoLocator</figcaption>
-</figure>
+  <figcaption>Figure1. GeoLocator</figcaption>
+</figure><br>
+<br>
 <figure>
   <img src="img/GeoTracer.png" alt="GeoTracer"/>
-  <figcaption>GeoTracer</figcaption>
-</figure>
+  <figcaption>Figure 2. GeoTracer</figcaption>
+</figure><br>
+<br>
 <figure>
   <img src="img/Operation-Monitor.png" alt="Operation Monitor"/>
-  <figcaption>Operation Monitor</figcaption>
-</figure>
+  <figcaption>Figure 3. Operation Monitor</figcaption>
+</figure><br>
+<br>
 
 ## Purpose
 
@@ -142,8 +145,12 @@ https://netbeans.org/downloads/
 
 		- Click "OK" to save this realm. The properties of this realm are displayed in the following figure.
 
-	![Alt text](/img/jdbc-realm.png?raw=true "JDBC Realm")
-		
+<figure>
+  <img src="img/jdbc-realm.png" alt="JDBC Realm"/>
+  <figcaption>Figure 4. JDBC Realm</figcaption>
+</figure><br>
+<br>
+	
  - After this procedure, exit GlassFish Console and shut down the server in NetBeans.
 
 ### Section D - build application
