@@ -30,7 +30,8 @@ The purpose of this repository is to provide example implementations of various 
 	d) Java API for RESTful Web Services (JAX-RS)
 	e) Java Message Service (JMS)
 	f) Java EE Security
-	g) jBCrypt
+	g) Concurrency Utilities for Java EE
+	h) jBCrypt
 
 ## Setup and Run Instructions
 
