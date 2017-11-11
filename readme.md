@@ -132,7 +132,7 @@ https://netbeans.org/downloads/
 
 	| Name  | Value |
 	| ------ | ----- |
-	| JASS Context  | jdbcRealm |
+	| JAAS Context  | jdbcRealm |
 	| JNDI  | jdbc/geolocations  |
 	| User Table  | GeolocationsUser  |
 	| User Name Column  | username  |
