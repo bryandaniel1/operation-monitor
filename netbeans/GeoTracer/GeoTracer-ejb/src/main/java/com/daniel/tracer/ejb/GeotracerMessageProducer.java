@@ -18,8 +18,6 @@ package com.daniel.tracer.ejb;
 import com.daniel.search.GeotracerEventResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -28,6 +26,8 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.Queue;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This class observes geographic tracer events and produces a message
@@ -53,6 +53,11 @@ public class GeotracerMessageProducer {
     private Queue queue;
 
     /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(GeotracerMessageProducer.class);
+
+    /**
      * This method listens handles the firing of a tracer event by sending the
      * event data as messages to the queue.
      *
@@ -63,7 +68,7 @@ public class GeotracerMessageProducer {
         try {
             jmsContext.createProducer().send(queue, new ObjectMapper().writeValueAsString(geotracerEvent));
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(GeotracerMessageProducer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("A JsonProcessingException occurred in the toJson method.", ex);
         }
     }
 }

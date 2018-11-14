@@ -19,8 +19,6 @@ import com.daniel.search.GeolocationSearchEventResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
@@ -32,6 +30,8 @@ import javax.jms.Queue;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This class observes geographic location search events and produces a message
@@ -69,6 +69,11 @@ public class EventHandler {
     public static final String QUEUE_NAME = "OperationQueue";
 
     /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(EventHandler.class);
+
+    /**
      * This method handles geographic location search events by producing a
      * message containing the event data and sending it to the operation queue.
      *
@@ -83,13 +88,13 @@ public class EventHandler {
             Queue queue = (Queue) context.lookup(QUEUE_NAME);
             jmsContext.createProducer().send(queue, new ObjectMapper().writeValueAsString(searchEvent));
         } catch (JsonProcessingException | JMSException | NamingException ex) {
-            Logger.getLogger(EventHandler.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("An exception occurred in produceSearchEventMessage method.", ex);
         }
     }
 
     /**
-     * This method creates the properties for the Java Message Service managed
-     * by GlassFish and returns the context created with these properties.
+     * This method creates the properties for the Java Message Service and
+     * returns the context created with these properties.
      *
      * @return the InitialContext object
      * @throws JMSException

@@ -21,8 +21,6 @@ import com.daniel.opmonitor.entity.GeotracerEvent;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -31,6 +29,8 @@ import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This managed bean supports the operations of the monitor page.
@@ -76,6 +76,11 @@ public class MonitorBean implements Serializable {
      * serial version UID
      */
     private static final long serialVersionUID = -3169450582569772788L;
+
+    /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(MonitorBean.class);
 
     /**
      * The geolocation service
@@ -158,8 +163,7 @@ public class MonitorBean implements Serializable {
             request.logout();
             ((HttpSession) context.getExternalContext().getSession(false)).invalidate();
         } catch (ServletException e) {
-            Logger.getLogger(SignInBean.class.getName()).log(Level.SEVERE,
-                    "Failed to sign out user!", e);
+            logger.error("Failed to sign out user!", e);
         }
         return "/signin?faces-redirect=true";
     }

@@ -17,13 +17,13 @@ package com.daniel.geolocator.ejb;
 
 import com.daniel.search.GeolocationSearchEventResult;
 import java.text.MessageFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This class fires search events to relay information concerning executed
@@ -42,6 +42,11 @@ public class EventPropagator {
     private Event<GeolocationSearchEventResult> searchEvent;
 
     /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(EventPropagator.class);
+
+    /**
      * This method fires the search event to be handled by whatever listeners
      * are waiting for it. The method is executed asynchronously in case the
      * observer methods handling the event are long-running.
@@ -52,8 +57,7 @@ public class EventPropagator {
     public void fireSearchEvent(GeolocationSearchEventResult geolocationSearchEvent) {
 
         searchEvent.fire(geolocationSearchEvent);
-        Logger.getLogger(EventPropagator.class.getName()).log(Level.INFO,
-                MessageFormat.format("A geographic location search event was fired for event timed: {0}",
+        logger.info(MessageFormat.format("A geographic location search event was fired for event timed: {0}",
                         geolocationSearchEvent.getTimeSearched()));
     }
 }

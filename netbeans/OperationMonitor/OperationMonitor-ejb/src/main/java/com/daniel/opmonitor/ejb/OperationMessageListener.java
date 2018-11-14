@@ -17,19 +17,21 @@ package com.daniel.opmonitor.ejb;
 
 import com.daniel.search.GeolocationSearchEventResult;
 import com.daniel.search.GeotracerEventResult;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.MessageFormat;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This MessageListener implementation handles messages arriving in the
@@ -49,6 +51,11 @@ public class OperationMessageListener implements MessageListener {
      */
     @EJB
     private GeolocationService geolocationService;
+    
+    /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(OperationMessageListener.class);
 
     /**
      * This method uses the geolocation service to convert messages from the
@@ -64,6 +71,7 @@ public class OperationMessageListener implements MessageListener {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);            
             String messageString = message.getBody(String.class);
 
             /*
@@ -73,7 +81,7 @@ public class OperationMessageListener implements MessageListener {
             Object json = mapper.readValue(messageString, Object.class);
             JsonNode rootNode = mapper.readTree(messageString);
             JsonNode hopsNode = rootNode.path("hops");
-            
+
             if (!hopsNode.isMissingNode()) {
                 GeotracerEventResult geotracerEventResult = mapper.convertValue(json,
                         GeotracerEventResult.class);
@@ -81,20 +89,20 @@ public class OperationMessageListener implements MessageListener {
             } else {
                 JsonNode geolocationNode = rootNode.path("geolocation");
                 if (!geolocationNode.isMissingNode()) {
+                    logger.info(MessageFormat.format("Message received:\n{0}", mapper.writerWithDefaultPrettyPrinter()
+                            .writeValueAsString(json)));
                     GeolocationSearchEventResult geolocationSearchEventResult
                             = mapper.convertValue(json, GeolocationSearchEventResult.class);
                     geolocationService.storeGeolocationSearchEvent(geolocationSearchEventResult);
                 } else {
-                    Logger.getLogger(OperationMessageListener.class.getName()).log(Level.INFO,
-                            "Unknown message received from the queue:\n{0}",
-                            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                    logger.info(MessageFormat.format("Unknown message received from the queue:\n{0}",
+                            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json)));
                 }
             }
         } catch (JMSException | JsonProcessingException ex) {
-            Logger.getLogger(OperationMessageListener.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("An exception occurred in onMessage method.", ex);
         } catch (IOException ex) {
-            Logger.getLogger(OperationMessageListener.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("An IOException occurred in onMessage method.", ex);
         }
     }
-
 }

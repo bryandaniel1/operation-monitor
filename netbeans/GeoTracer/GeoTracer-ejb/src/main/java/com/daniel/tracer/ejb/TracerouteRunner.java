@@ -20,8 +20,8 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This class contains functionality for executing the traceroute function and
@@ -35,6 +35,11 @@ public class TracerouteRunner implements Callable<LinkedList<String>> {
      * The no response indicator for a hop
      */
     public static final String NO_RESPONSE = "no response";
+
+    /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(TracerouteRunner.class);
 
     /**
      * The command used for the task
@@ -72,7 +77,7 @@ public class TracerouteRunner implements Callable<LinkedList<String>> {
         String line;
         int iteration = 0;
         while ((line = reader.readLine()) != null) {
-            Logger.getLogger(TracerouteRunner.class.getName()).log(Level.INFO, line);
+            logger.info(line);
             if (iteration > 0) {
                 StringTokenizer tokenizer = new StringTokenizer(line, " ");
                 tokenizer.nextToken();

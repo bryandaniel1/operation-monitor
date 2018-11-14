@@ -15,6 +15,7 @@
  */
 package com.daniel.search;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -48,66 +49,77 @@ public class GeolocationResult {
      * The IP address of the geographic location
      */
     @XmlElement(name = "ip")
+    @JsonProperty("ip")
     private String ipAddress;
 
     /**
      * The 2-letter country code
      */
     @XmlElement(name = "country_code")
+    @JsonProperty("country_code")
     private String countryCode;
 
     /**
      * The name of the country
      */
     @XmlElement(name = "country_name")
+    @JsonProperty("country_name")
     private String countryName;
 
     /**
      * The code of the region within the country
      */
     @XmlElement(name = "region_code")
+    @JsonProperty("region_code")
     private String regionCode;
 
     /**
      * The name of the region within the country
      */
     @XmlElement(name = "region_name")
+    @JsonProperty("region_name")
     private String regionName;
 
     /**
      * The city of the geographic location
      */
     @XmlElement(name = "city")
+    @JsonProperty("city")
     private String city;
 
     /**
      * The postal code
      */
     @XmlElement(name = "zip_code")
+    @JsonProperty("zip_code")
     private String zipCode;
 
     /**
      * The time zone
      */
     @XmlElement(name = "time_zone")
+    @JsonProperty("time_zone")
     private String timeZone;
 
     /**
      * The latitude
      */
     @XmlElement(name = "latitude")
+    @JsonProperty("latitude")
     private float latitude;
 
     /**
      * The longitude
      */
     @XmlElement(name = "longitude")
+    @JsonProperty("longitude")
     private float longitude;
 
     /**
      * The metro code
      */
     @XmlElement(name = "metro_code")
+    @JsonProperty("metro_code")
     private int metroCode;
 
     /**

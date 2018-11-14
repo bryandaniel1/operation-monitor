@@ -18,6 +18,7 @@ package com.daniel.tracer.ejb;
 import com.daniel.search.GeolocationSearchEventResult;
 import com.daniel.search.GeolocationSearchTask;
 import com.daniel.search.GeotracerEventResult;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -26,9 +27,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.concurrent.ManagedExecutorService;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This class runs the traceroute program to collect information on the path
@@ -39,14 +40,17 @@ import javax.enterprise.concurrent.ManagedExecutorService;
 public final class GeotracerPathFinder {
 
     /**
-     * The command and parameters for the traceroute function:
-     * -n no mapping to host names
-     * -w the response wait time
-     * -q the number of probe packets sent per hop
-     * -N the number of concurrent packet launches
-     * -m the maximum number of hops to probe
+     * The command and parameters for the traceroute function: -n no mapping to
+     * host names -w the response wait time -q the number of probe packets sent
+     * per hop -N the number of concurrent packet launches -m the maximum number
+     * of hops to probe
      */
     public static final String TRACEROUTE_COMMAND = "traceroute -n -w 2 -q 1 -N 17 -m 17 ";
+
+    /**
+     * The logger for this class
+     */
+    private static final Logger LOGGER = LogManager.getLogger(GeotracerPathFinder.class);
 
     /**
      * Private constructor - not called
@@ -125,13 +129,13 @@ public final class GeotracerPathFinder {
                 ipAddresses.put(hopCount++, ascendingIterator.next());
             }
 
-        } catch (InterruptedException | ExecutionException ex) {
-            Logger.getLogger(GeotracerPathFinder.class.getName()).log(Level.SEVERE,
-                    "GeotracerPathFinder.collectAddresses exception. ", ex);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            LOGGER.error("GeotracerPathFinder.collectAddresses ExecutionException.", e);
         }
-        Logger.getLogger(GeotracerPathFinder.class.getName()).log(Level.INFO,
-                "GeotracerPathFinder.collectAddresses time elapsed: {0}ms",
-                System.currentTimeMillis() - time);
+        LOGGER.info(MessageFormat.format("GeotracerPathFinder.collectAddresses time elapsed: {0}ms",
+                System.currentTimeMillis() - time));
 
         return ipAddresses;
     }
@@ -175,14 +179,12 @@ public final class GeotracerPathFinder {
                 }
             }
         } catch (InterruptedException e) {
-            Logger.getLogger(GeotracerPathFinder.class.getName()).log(Level.SEVERE,
-                    "The executor encountered an error.", e);
+            Thread.currentThread().interrupt();
         } catch (ExecutionException ee) {
-            Logger.getLogger(GeotracerPathFinder.class.getName()).log(Level.SEVERE,
-                    "The task threw an error.", ee);
+            LOGGER.error("The task threw an error.", ee);
         }
-        Logger.getLogger(GeotracerPathFinder.class.getName()).log(Level.INFO,
-                "GeotracerPathFinder.fetchLocations time elapsed: {0}ms", System.currentTimeMillis() - time);
+        LOGGER.info(MessageFormat.format("GeotracerPathFinder.fetchLocations time elapsed: {0}ms",
+                System.currentTimeMillis() - time));
 
         return hopLocations;
     }

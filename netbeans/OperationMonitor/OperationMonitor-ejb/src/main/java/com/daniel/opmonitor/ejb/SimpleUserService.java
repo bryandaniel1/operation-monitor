@@ -16,14 +16,15 @@
 package com.daniel.opmonitor.ejb;
 
 import com.daniel.opmonitor.entity.GeolocationsUser;
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -41,6 +42,11 @@ public class SimpleUserService implements UserService {
      * The ending index of the salt portion of the hash
      */
     public static final int SALT_END_INDEX = 29;
+
+    /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(SimpleUserService.class);
 
     /**
      * The entity manager for the chat room entities
@@ -61,9 +67,8 @@ public class SimpleUserService implements UserService {
         if (user != null) {
             String hash = user.getPassword();
             if (hash == null || hash.length() < SALT_END_INDEX) {
-                Logger.getLogger(SimpleUserService.class.getName()).log(Level.SEVERE,
-                        "SimpleUserService: A valid hash was not found for the user, {0}.",
-                        user.getUsername());
+                logger.error(MessageFormat.format("SimpleUserService: A valid hash was not found for the user, {0}.",
+                        user.getUsername()));
             } else {
                 return hash.substring(SALT_BEGIN_INDEX, SALT_END_INDEX);
             }
@@ -86,11 +91,9 @@ public class SimpleUserService implements UserService {
         try {
             user = (GeolocationsUser) query.setParameter("username", username).getSingleResult();
         } catch (NoResultException nre) {
-            Logger.getLogger(SimpleUserService.class.getName()).log(Level.INFO,
-                    "No user could be found with the username, {0}.", username);
+            logger.info(MessageFormat.format("No user could be found with the username, {0}.", username));
         } catch (Exception e) {
-            Logger.getLogger(SimpleUserService.class.getName()).log(Level.SEVERE,
-                    "SimpleUserService: An exception occurred in the findGeolocationsUser method.", e);
+            logger.error("SimpleUserService: An exception occurred in the findGeolocationsUser method.", e);
         }
         return user;
     }
@@ -103,14 +106,13 @@ public class SimpleUserService implements UserService {
      */
     @Override
     public List<GeolocationsUser> findAllUsers() {
-        
+
         Query query = entityManager.createNamedQuery("GeolocationsUser.findAll");
         List<GeolocationsUser> users = null;
-        try{
+        try {
             users = query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger(SimpleUserService.class.getName()).log(Level.SEVERE,
-                    "SimpleUserService: An exception occurred in the findAllUsers method.", e);
+            logger.error("SimpleUserService: An exception occurred in the findAllUsers method.", e);
         }
         return users;
     }

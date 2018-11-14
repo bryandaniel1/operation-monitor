@@ -27,13 +27,12 @@ import com.daniel.search.GeolocationSearchEventResult;
 import com.daniel.search.GeotracerEventResult;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
@@ -43,6 +42,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This implementation of GeolocationService contains methods for accessing and
@@ -75,6 +76,11 @@ public class SimpleGeolocationService implements GeolocationService {
     private EJBContext context;
 
     /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(SimpleGeolocationService.class);
+
+    /**
      * The entity manager for the chat room entities
      */
     @PersistenceContext(unitName = "OperationMonitor-ejbPU")
@@ -103,8 +109,7 @@ public class SimpleGeolocationService implements GeolocationService {
             geolocationSearchEvents = query.setParameter("daySearched", dateOccurred)
                     .setParameter("dayAfter", dayAfter.getTime()).getResultList();
         } catch (Exception e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "An exception occurred in the findGeolocationSearchEvents method.", e);
+            logger.error("An exception occurred in the findGeolocationSearchEvents method.", e);
         }
         return geolocationSearchEvents;
     }
@@ -132,8 +137,7 @@ public class SimpleGeolocationService implements GeolocationService {
             geotracerEvents = query.setParameter("daySearched", dateOccurred)
                     .setParameter("dayAfter", dayAfter.getTime()).getResultList();
         } catch (Exception e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "An exception occurred in the findGeolocationSearchEvents method.", e);
+            logger.error("An exception occurred in the findGeolocationSearchEvents method.", e);
         }
         return geotracerEvents;
     }
@@ -159,14 +163,12 @@ public class SimpleGeolocationService implements GeolocationService {
             entityManager.flush();
             return true;
         } catch (ValidationException ve) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: A ValidationException occurred in the storeGeolocationSearchEvent method: {0}",
-                    ve.getMessage());
+            logger.error(MessageFormat.format("SimpleGeolocationService: A ValidationException occurred in the storeGeolocationSearchEvent method: {0}",
+                    ve.getMessage()));
             context.setRollbackOnly();
         } catch (Exception e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: An Exception occurred in the storeGeolocationSearchEvent method: {0}",
-                    e.getMessage());
+            logger.error(MessageFormat.format("SimpleGeolocationService: An Exception occurred in the storeGeolocationSearchEvent method: {0}",
+                    e.getMessage()));
             context.setRollbackOnly();
         }
         return false;
@@ -194,7 +196,7 @@ public class SimpleGeolocationService implements GeolocationService {
             // each hop in the route is stored
             LinkedHashMap<Integer, GeolocationSearchEventResult> results = geotracerEventResult.getHops();
             List<TracerHop> tracerHopList = new ArrayList<>();
-            for (Integer hopOrder : results.keySet()) {
+            results.keySet().forEach((hopOrder) -> {
                 TracerHop tracerHop = storeTracerHop(hopOrder, geotracerEvent);
                 tracerHopList.add(tracerHop);
 
@@ -209,25 +211,21 @@ public class SimpleGeolocationService implements GeolocationService {
                     HopSearch hopSearch = createHopSearch(tracerHop, geolocationSearchEvent);
                     geolocationSearchEvent.setHopSearch(hopSearch);
                 }
-            }
+            });
             geotracerEvent.setTracerHopList(tracerHopList);
             entityManager.flush();
             return true;
         } catch (ConstraintViolationException e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: A ConstraintViolationException occurred in the storeGeotracerEvent method.");
-            e.getConstraintViolations().forEach(err -> Logger.getLogger(SimpleGeolocationService.class.getName())
-                    .log(Level.SEVERE, err.toString()));
+            logger.error("SimpleGeolocationService: A ConstraintViolationException occurred in the storeGeotracerEvent method.");
+            e.getConstraintViolations().forEach(err -> logger.error(err.toString()));
             context.setRollbackOnly();
         } catch (ValidationException ve) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: A ValidationException occurred in the storeGeotracerEvent method.",
+            logger.error("SimpleGeolocationService: A ValidationException occurred in the storeGeotracerEvent method.",
                     ve);
             context.setRollbackOnly();
         } catch (Exception e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: An Exception occurred in the storeGeotracerEvent method: {0}",
-                    e.getMessage());
+            logger.error(MessageFormat.format("SimpleGeolocationService: An Exception occurred in the storeGeotracerEvent method: {0}",
+                    e.getMessage()));
             context.setRollbackOnly();
         }
         return false;
@@ -249,12 +247,10 @@ public class SimpleGeolocationService implements GeolocationService {
                     .setParameter("latitude", geolocationResult.getLatitude())
                     .setParameter("longitude", geolocationResult.getLongitude()).getSingleResult();
         } catch (NoResultException nre) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.INFO,
-                    "SimpleGeolocationService: No geolocation stored for IP address {0}.",
-                    geolocationResult.getIpAddress());
+            logger.info(MessageFormat.format("SimpleGeolocationService: No geolocation stored for IP address {0}.",
+                    geolocationResult.getIpAddress()));
         } catch (Exception e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: An exception occurred in the findGeolocation method.", e);
+            logger.error("SimpleGeolocationService: An exception occurred in the findGeolocation method.", e);
         }
         return geolocation;
     }
@@ -271,15 +267,13 @@ public class SimpleGeolocationService implements GeolocationService {
 
         Region region = null;
         try {
-            region = entityManager.createNamedQuery("Region.findByRegionCode",
-                    Region.class).setParameter("regionCode", regionCode).getSingleResult();
-        } catch (NoResultException nre) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.INFO,
-                    "SimpleGeolocationService: No geolocation stored for region code {0}.",
-                    regionCode);
+            region = entityManager.find(Region.class, regionCode);
+            if (region == null) {
+                logger.info(MessageFormat.format("SimpleGeolocationService: No geolocation stored for region code {0}.",
+                        regionCode));
+            }
         } catch (Exception e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: An exception occurred in the findRegion method.", e);
+            logger.error("SimpleGeolocationService: An exception occurred in the findRegion method.", e);
         }
         return region;
     }
@@ -296,15 +290,13 @@ public class SimpleGeolocationService implements GeolocationService {
 
         Country country = null;
         try {
-            country = entityManager.createNamedQuery("Country.findByCountryCode",
-                    Country.class).setParameter("countryCode", countryCode).getSingleResult();
-        } catch (NoResultException nre) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.INFO,
-                    "SimpleGeolocationService: No geolocation stored for country code {0}.",
-                    countryCode);
+            country = entityManager.find(Country.class, countryCode);
+            if (country == null) {
+                logger.info(MessageFormat.format("SimpleGeolocationService: No geolocation stored for country code {0}.",
+                    countryCode));
+            }
         } catch (Exception e) {
-            Logger.getLogger(SimpleGeolocationService.class.getName()).log(Level.SEVERE,
-                    "SimpleGeolocationService: An exception occurred in the findCountry method.", e);
+            logger.error("SimpleGeolocationService: An exception occurred in the findCountry method.", e);
         }
         return country;
     }

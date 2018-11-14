@@ -42,7 +42,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Region.findAll", query = "SELECT r FROM Region r")
-    , @NamedQuery(name = "Region.findByRegionCode", query = "SELECT r FROM Region r WHERE r.regionCode = :regionCode")
     , @NamedQuery(name = "Region.findByRegionName", query = "SELECT r FROM Region r WHERE r.regionName = :regionName")})
 public class Region implements Serializable {
 

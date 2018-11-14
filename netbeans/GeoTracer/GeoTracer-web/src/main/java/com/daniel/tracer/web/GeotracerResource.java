@@ -21,8 +21,6 @@ import com.daniel.search.GeotracerPath;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
@@ -31,6 +29,8 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This REST Web Service handles requests to search for geographic location
@@ -47,6 +47,11 @@ public class GeotracerResource {
      */
     @EJB
     private GeotracerService geotracerService;
+
+    /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(GeotracerResource.class);
 
     /**
      * This method takes a destination IP address parameter and invokes the
@@ -83,7 +88,8 @@ public class GeotracerResource {
     }
 
     /**
-     * This method converts the list of GeolocationResult objects to a JSON string.
+     * This method converts the list of GeolocationResult objects to a JSON
+     * string.
      *
      * @param geolocation the list geographic location data objects
      * @return the JSON string
@@ -93,7 +99,7 @@ public class GeotracerResource {
         try {
             json = new ObjectMapper().writeValueAsString(geolocations);
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(GeotracerResource.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("A JsonProcessingException occurred in the toJson method.", ex);
         }
         return json;
     }

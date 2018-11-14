@@ -17,13 +17,13 @@ package com.daniel.tracer.ejb;
 
 import com.daniel.search.GeotracerEventResult;
 import java.text.MessageFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This class fires tracer events to relay information concerning executed
@@ -42,6 +42,11 @@ public class GeotracerEventRelay {
     private Event<GeotracerEventResult> tracerEvent;
 
     /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(GeotracerEventRelay.class);
+
+    /**
      * This method fires the tracer event to be handled by the listener(s) for
      * the GeotracerEventResult. The method is executed asynchronously in case
      * the observer methods handling the event are long-running.
@@ -52,8 +57,7 @@ public class GeotracerEventRelay {
     public void fireSearchEvent(GeotracerEventResult geotracerEvent) {
 
         tracerEvent.fire(geotracerEvent);
-        Logger.getLogger(GeotracerEventRelay.class.getName()).log(Level.INFO,
-                MessageFormat.format("A geographic tracer event was fired for execution timed: {0}",
-                        geotracerEvent.getTimeExecuted()));
+        logger.info(MessageFormat.format("A geographic tracer event was fired for execution timed: {0}",
+                geotracerEvent.getTimeExecuted()));
     }
 }

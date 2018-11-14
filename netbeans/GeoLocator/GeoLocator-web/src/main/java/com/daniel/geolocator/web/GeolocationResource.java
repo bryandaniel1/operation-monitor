@@ -19,8 +19,6 @@ import com.daniel.geolocator.ejb.GeolocationService;
 import com.daniel.search.GeolocationResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
@@ -29,6 +27,8 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This REST Web Service handles requests to search for geographic location
@@ -45,6 +45,11 @@ public class GeolocationResource {
      */
     @EJB
     private GeolocationService geolocationService;
+
+    /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(GeolocationResource.class);
 
     /**
      * This method takes an IP address parameter and invokes the
@@ -84,7 +89,7 @@ public class GeolocationResource {
         try {
             json = new ObjectMapper().writeValueAsString(geolocation);
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(GeolocationResource.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("A JsonProcessingException occurred in the toJson method.", ex);
         }
         return json;
     }

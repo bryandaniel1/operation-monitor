@@ -26,8 +26,8 @@ import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This managed bean holds the information and functionality to support the
@@ -40,9 +40,14 @@ import java.util.logging.Logger;
 public class DetailsBean implements Serializable {
 
     /**
-     * serial version UID
+     * Serial version UID
      */
-    private static final long serialVersionUID = -6635059200753460162L;
+    private static final long serialVersionUID = 2829701574790099787L;
+
+    /**
+     * The logger for this class
+     */
+    private final Logger logger = LogManager.getLogger(DetailsBean.class);
 
     /**
      * The selected geographic data search event
@@ -84,7 +89,7 @@ public class DetailsBean implements Serializable {
         for (TracerHop hop : selectedTracerEvent.getTracerHopList()) {
             if (hop.getHopSearch() != null){
                 hopLocations.add(hop.getHopSearch().getSearch().getLocation());
-            }            
+            }
         }
         return "/monitor/details";
     }
@@ -155,8 +160,7 @@ public class DetailsBean implements Serializable {
             try {
                 searchLocationString = new ObjectMapper().writeValueAsString(selectedSearchEvent.getLocation());
             } catch (JsonProcessingException ex) {
-                Logger.getLogger(DetailsBean.class.getName()).log(Level.SEVERE, 
-                        "An exception occurred in the getSearchLocationString method.", ex);
+                logger.error("An exception occurred in the getSearchLocationString method.", ex);
             }
         }
         return searchLocationString;
@@ -174,8 +178,7 @@ public class DetailsBean implements Serializable {
             try {
                 tracerString = new ObjectMapper().writeValueAsString(hopLocations);
             } catch (JsonProcessingException ex) {
-                Logger.getLogger(DetailsBean.class.getName()).log(Level.SEVERE, 
-                        "An exception occurred in the getTracerString method.", ex);
+                logger.error("An exception occurred in the getTracerString method.", ex);
             }
         }
         return tracerString;
