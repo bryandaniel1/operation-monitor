@@ -59,19 +59,19 @@ $(document).ready(function () {
                 <div id=\"content" + (i + 1) + "\">\n\
                 </div>");
             } else {
-                var countryCode = data[i].countryCode === "" ? "*" : data[i].countryCode;
-                var countryName = data[i].countryName === "" ? "*" : data[i].countryName;
-                var regionCode = data[i].regionCode === "" ? "*" : data[i].regionCode;
-                var regionName = data[i].regionName === "" ? "*" : data[i].regionName;
+                var countryCode = data[i].country_code === "" ? "*" : data[i].country_code;
+                var countryName = data[i].country_name === "" ? "*" : data[i].country_name;
+                var regionCode = data[i].region_code === "" ? "*" : data[i].region_code;
+                var regionName = data[i].region_name === "" ? "*" : data[i].region_name;
                 var city = data[i].city === "" ? "*" : data[i].city;
-                var zipCode = data[i].zipCode === "" ? "*" : data[i].zipCode;
-                var timeZone = data[i].timeZone === "" ? "*" : data[i].timeZone;
+                var zipCode = data[i].zip_code === "" ? "*" : data[i].zip_code;
+                var timeZone = data[i].time_zone === "" ? "*" : data[i].time_zone;
                 var latitude = data[i].latitude === "" ? "*" : data[i].latitude;
                 var longitude = data[i].longitude === "" ? "*" : data[i].longitude;
-                var metroCode = data[i].metroCode === "" ? "*" : data[i].metroCode;
+                var metroCode = data[i].metro_code === "" ? "*" : data[i].metro_code;
                 $("#dataAccordion").append("\
                 <h3 id=\"header" + (i + 1) + "\">" + (i + 1) + ".&nbsp;IP Address: "
-                        + data[i].ipAddress + "</h3>\n\
+                        + data[i].ip + "</h3>\n\
                 <div id=\"content" + (i + 1) + "\">\n\
                     <div class=\"dataNames\">\n\
                         <div class=\"ipAddressLabel\">IP address:&nbsp;</div>\n\
@@ -87,7 +87,7 @@ $(document).ready(function () {
                         <div class=\"metroCodeLabel\">Metro Code:&nbsp;</div>\n\
                     </div>\n\
                     <div class=\"dataValues\">\n\
-                        <div class=\"ipAddressDiv\">" + data[i].ipAddress + "</div>\n\
+                        <div class=\"ipAddressDiv\">" + data[i].ip + "</div>\n\
                         <div class=\"countryCodeDiv\">" + countryCode + "</div>\n\
                         <div class=\"countryNameDiv\">" + countryName + "</div>\n\
                         <div class=\"regionCodeDiv\">" + regionCode + "</div>\n\

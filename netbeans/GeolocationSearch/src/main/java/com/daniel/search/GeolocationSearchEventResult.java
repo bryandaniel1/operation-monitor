@@ -16,36 +16,32 @@
 package com.daniel.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * This class represents the geographic location search event.
  *
  * @author Bryan Daniel
  */
-@XmlRootElement(name = "geolocation_search_event")
+@JsonRootName(value = "geolocation_search_event")
 public class GeolocationSearchEventResult {
 
     /**
      * The time the geographic location was searched
      */
-    @XmlElement(name = "time_searched")
     @JsonProperty("time_searched")
     private Date timeSearched;
     
     /**
      * The time taken to complete the search
      */
-    @XmlElement(name = "time_elapsed")
     @JsonProperty("time_elapsed")
     private long timeElapsed;
 
     /**
      * The geographic location data
      */
-    @XmlElement(name = "geolocation")
     @JsonProperty("geolocation")
     private GeolocationResult geolocation;
 

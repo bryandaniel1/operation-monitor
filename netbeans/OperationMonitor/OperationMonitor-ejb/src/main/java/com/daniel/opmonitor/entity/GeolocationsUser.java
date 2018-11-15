@@ -48,7 +48,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "GeolocationsUser.findByPassword", query = "SELECT g FROM GeolocationsUser g WHERE g.password = :password")})
 public class GeolocationsUser implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -9117976787447048486L;
     @Id
     @Basic(optional = false)
     @NotNull

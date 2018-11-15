@@ -15,35 +15,35 @@
  */
 package com.daniel.search;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * This class represents the geographic tracer event.
  *
  * @author Bryan Daniel
  */
-@XmlRootElement(name = "geotracer_event")
+@JsonRootName(value = "geotracer_event")
 public class GeotracerEventResult {
 
     /**
      * The time of traceroute function execution
      */
-    @XmlElement(name = "time_executed")
+    @JsonProperty("time_executed")
     private Date timeExecuted;
 
     /**
      * The time taken to complete the trace
      */
-    @XmlElement(name = "time_elapsed")
+    @JsonProperty("time_elapsed")
     private long timeElapsed;
 
     /**
      * The map of geographic locations collected for the hops
      */
-    @XmlElement(name = "hops")
+    @JsonProperty("hops")
     private LinkedHashMap<Integer, GeolocationSearchEventResult> hops;
 
     /**
