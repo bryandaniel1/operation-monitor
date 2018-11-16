@@ -45,7 +45,7 @@ public final class GeotracerPathFinder {
      * per hop -N the number of concurrent packet launches -m the maximum number
      * of hops to probe
      */
-    public static final String TRACEROUTE_COMMAND = "traceroute -n -w 2 -q 1 -N 17 -m 17 ";
+    public static final String TRACEROUTE_COMMAND = "traceroute -n -w 3 -q 3 -N 17 -m 17 ";
 
     /**
      * The logger for this class
