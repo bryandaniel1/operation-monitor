@@ -164,11 +164,11 @@ https://www.payara.fish/software/downloads/
 
 ### Section D - build application
 
-These applications are built with Maven, so all JAR dependecies are specified in the projects' pom.xml files. Each application can be built from NetBeans IDe by right-clicking the top-level project node and selecting "Clean and Build".
+These applications are built with Maven, so all JAR dependecies are specified in the projects' pom.xml files. Each application can be built from NetBeans IDE by right-clicking the top-level project node and selecting "Clean and Build".
 
 ### Section E - deploy application
 
-**a)** Once created in the target directory, the EAR file can be deployed to the Payara server on the "Applications" page of the admin console.
+**a)** Once created in the target directory, the EAR files can be deployed to the Payara server on the "Applications" page of the admin console.
 
 **b)** View the Operation Monitor application by pointing the web browser to https://localhost:8181/OperationMonitor-web for a connection with SSL/TLS implemented.  Otherwise, comment out the web module security constraint in /WEB-INF/web.xml and point the browser to http://localhost:8080/OperationMonitor-web. The application, StocksClient, does not have this security constraint.
 	
