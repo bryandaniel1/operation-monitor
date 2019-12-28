@@ -21,72 +21,74 @@
                 <h:commandButton styleClass="submitButton" value="Submit" action="#{monitorBean.search}" />
             </h:form>
         </section>
-        <h:panelGroup id="results">
+        <section id="dataSection">
             <h:messages errorClass="ui-state-error"/>
-            <h:panelGroup styleClass="resultTable" rendered="#{not empty monitorBean.geolocationSearchEvents}">
-                <h3>Geolocation Search Events for 
+            <h:panelGroup styleClass="ui-widget" rendered="#{not empty monitorBean.stockPriceSearchEvents}">
+                <h3>Stock Price Search Events for 
                     <h:outputText value="#{monitorBean.selectedDate}">
                         <f:convertDateTime type="date" dateStyle="medium"/>
                     </h:outputText>
                 </h3>
                 <h:form>
-                    <h:dataTable id="searchEventTable" styleClass="eventTable display responsive" width="100%" value="#{monitorBean.geolocationSearchEvents}" var="event">
+                    <h:dataTable id="searchEventTable" styleClass="eventTable display responsive" width="100%" value="#{monitorBean.stockPriceSearchEvents}" var="event">
                         <h:column>
-                            <f:facet name="header"><h:outputText value="Time Searched" styleClass="dataTableHeader"/></f:facet>
-                            <h:outputText value="${event.timeSearched}"/>
+                            <f:facet name="header"><h:outputText value="Symbol" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.symbol.symbol}"/>
                         </h:column>
                         <h:column>
-                            <f:facet name="header"><h:outputText value="Time Elapsed" styleClass="dataTableHeader"/></f:facet>
+                            <f:facet name="header"><h:outputText value="Price" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.price}">
+                                <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Date Searched" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.searchDateTime}">
+                                <f:convertDateTime type="date" dateStyle="medium"/>
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Time Elapsed in ms" styleClass="dataTableHeader"/></f:facet>
                             <h:outputText value="${event.timeElapsed}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header"><h:outputText value="Latitude" styleClass="dataTableHeader"/></f:facet>
-                            <h:outputText value="${event.location.latitude}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header"><h:outputText value="Longitude" styleClass="dataTableHeader"/></f:facet>
-                            <h:outputText value="${event.location.longitude}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header"><h:outputText value="Detailed View" styleClass="dataTableHeader"/></f:facet>
                             <h:commandButton styleClass="button ui-button" style="font-size:0.95em;" value="View Event" action="#{detailsBean.viewSearchEvent}" >
-                                <f:setPropertyActionListener target="#{detailsBean.selectedSearchEvent}" 
+                                <f:setPropertyActionListener target="#{detailsBean.selectedStockPriceSearchEvent}" 
                                                              value="${event}" />
                             </h:commandButton>
                         </h:column>
                     </h:dataTable>
                 </h:form>
             </h:panelGroup>            
-            <h:panelGroup styleClass="resultTable" rendered="#{not empty monitorBean.geotracerEvents}">
-                <h3>Geotracer Events for 
+            <h:panelGroup styleClass="ui-widget" rendered="#{not empty monitorBean.stockHistorySearchEvents}">
+                <h3>Stock Price History Events for 
                     <h:outputText value="#{monitorBean.selectedDate}">
                         <f:convertDateTime type="date" dateStyle="medium"/>
                     </h:outputText>
                 </h3>
                 <h:form>
-                    <h:dataTable id="tracerEventTable" styleClass="eventTable display responsive" width="100%" value="#{monitorBean.geotracerEvents}" var="event">
+                    <h:dataTable id="historyEventTable" styleClass="eventTable display responsive" width="100%" value="#{monitorBean.stockHistorySearchEvents}" var="event">
                         <h:column>
-                            <f:facet name="header"><h:outputText value="Time Executed" styleClass="dataTableHeader"/></f:facet>
-                            <h:outputText value="${event.timeExecuted}"/>
+                            <f:facet name="header"><h:outputText value="Stock Symbol" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.stockHistoryResultList[0].stock.symbol}"/>
                         </h:column>
                         <h:column>
-                            <f:facet name="header"><h:outputText value="Time Elapsed" styleClass="dataTableHeader"/></f:facet>
-                            <h:outputText value="${event.timeElapsed}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header"><h:outputText value="From IP Address" styleClass="dataTableHeader"/></f:facet>
-                            <h:outputText value="${event.tracerHopList[0].hopSearch.search.location.ipAddress}"/>
+                            <f:facet name="header"><h:outputText value="Date Searched" styleClass="dataTableHeader"/></f:facet>
+                            <h:outputText value="${event.searchDateTime}">
+                                <f:convertDateTime type="date" dateStyle="medium"/>
+                            </h:outputText>
                         </h:column>
                         <h:column>
                             <f:facet name="header"><h:outputText value="Detailed View" styleClass="dataTableHeader"/></f:facet>
-                            <h:commandButton styleClass="button ui-button" style="font-size:0.95em;" value="View Event" action="#{detailsBean.viewTracerEvent}" >
-                                <f:setPropertyActionListener target="#{detailsBean.selectedTracerEvent}" 
+                            <h:commandButton styleClass="button ui-button" style="font-size:0.95em;" value="View Event" action="#{detailsBean.viewHistorySearchEvent}" >
+                                <f:setPropertyActionListener target="#{detailsBean.selectedStockHistorySearchEvent}" 
                                                              value="${event}" />
                             </h:commandButton>
                         </h:column>
                     </h:dataTable>                
                 </h:form>
             </h:panelGroup>            
-        </h:panelGroup>
+        </section>
     </ui:define>   
 </ui:composition>

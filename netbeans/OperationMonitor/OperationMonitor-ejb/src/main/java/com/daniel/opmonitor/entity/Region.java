@@ -59,9 +59,6 @@ public class Region implements Serializable {
     private String regionName;
     @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "region")
-    private List<Geolocation> geolocationList;
-    @JsonBackReference
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "region")
     private List<UserContact> userContactList;
 
     /**
@@ -124,25 +121,6 @@ public class Region implements Serializable {
      */
     public void setRegionName(String regionName) {
         this.regionName = regionName;
-    }
-
-    /**
-     * Gets the value of geolocationList
-     *
-     * @return the value of geolocationList
-     */
-    @XmlTransient
-    public List<Geolocation> getGeolocationList() {
-        return geolocationList;
-    }
-
-    /**
-     * Sets the value of geolocationList
-     *
-     * @param geolocationList the value of geolocationList
-     */
-    public void setGeolocationList(List<Geolocation> geolocationList) {
-        this.geolocationList = geolocationList;
     }
 
     /**

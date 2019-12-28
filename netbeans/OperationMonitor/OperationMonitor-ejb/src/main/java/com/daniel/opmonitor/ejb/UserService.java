@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package com.daniel.opmonitor.ejb;
 
-import com.daniel.opmonitor.entity.GeolocationsUser;
+import com.daniel.opmonitor.entity.OperationMonitorUser;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -37,19 +37,19 @@ public interface UserService {
     public String findUserSalt(String username);
 
     /**
-     * This method finds the geolocations user associated with the given
+     * This method finds the Operation Monitor user associated with the given
      * username.
      *
      * @param username the username
      * @return the user entity
      */
-    public GeolocationsUser findGeolocationsUser(String username);
+    public OperationMonitorUser findOperationMonitorUser(String username);
 
     /**
-     * This method collects all users of the geolocations database and returns
+     * This method collects all users of the stock search database and returns
      * them as a list.
      *
      * @return the list of all users
      */
-    public List<GeolocationsUser> findAllUsers();
+    public List<OperationMonitorUser> findAllUsers();
 }

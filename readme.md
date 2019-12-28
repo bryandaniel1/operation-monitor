@@ -2,21 +2,21 @@
 
 ## System Overview
 
-This set of enterprise applications provides example usages of web services and message queues. The Geolocator application is a web service which provides geographic location data using IP address input in web service calls to publicly available web services.  The Geotracer application, similar to the Geolocator, is a web service providing geographic data using publicly available web services.  The Geotracer, moreover, displays data for a trace route when given a destination URL. Both the Geolocator and Geotracer relay these web service events to a message queue monitored by the Operation Monitor application.
+This set of enterprise applications provides example usages of web services and message queues. The Stocks Client application is a web service which provides the ability to query stock market price and history information from a public API.  The API providing the stock market information is [World Trading Data](https://www.worldtradingdata.com/).  An account with World Trading Data is required in order to obtain an API key to make service calls.  The Stocks Client application relays these web service events to a message queue monitored by the Operation Monitor application.
 
 <figure>
-  <img src="img/GeoLocator.png" alt="GeoLocator"/>
-  <figcaption>Figure1. GeoLocator</figcaption>
+  <img src="img/StocksClient.png" alt="StocksClient"/>
+  <figcaption>Figure1. Stocks Client</figcaption>
 </figure><br>
 <br>
 <figure>
-  <img src="img/GeoTracer.png" alt="GeoTracer"/>
-  <figcaption>Figure 2. GeoTracer</figcaption>
+  <img src="img/OperationMonitorSearch.png" alt="Operation Monitor Search"/>
+  <figcaption>Figure 2. Operation Monitor Search</figcaption>
 </figure><br>
 <br>
 <figure>
-  <img src="img/Operation-Monitor.png" alt="Operation Monitor"/>
-  <figcaption>Figure 3. Operation Monitor</figcaption>
+  <img src="img/OperationMonitorDetails.png" alt="Operation Monitor Details"/>
+  <figcaption>Figure 3. Operation Monitor Details</figcaption>
 </figure><br>
 <br>
 
@@ -60,13 +60,17 @@ http://dev.mysql.com/downloads/
 
 http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
-**c)** Download and install NetBeans 8 IDE with GlassFish Server from
+**c)** Download and install NetBeans 8 IDE from
 
 https://netbeans.org/downloads/
 
+**d)** Download and install Payara Server from 
+
+https://www.payara.fish/software/downloads/
+
 ### Section B - build MySQL database
 
-**a)** In Workbench, open and execute the file named "geolocations_db.sql".
+**a)** In Workbench, open and execute the file named "stock\_search\_db.sql".
 
 ### Section C - configuration
 
@@ -74,23 +78,23 @@ https://netbeans.org/downloads/
 
  - These applications require a message queue to be established. To create the required message queue, follow the steps below.
 
-		- In the Services view of NetBeans, expand the Servers node, right-click the GlassFish Server, and select "Start".
+		- Start the Payara server with the asadmin script by executing "payara/bin/asadmin start-domain" from a terminal.
 
-		- Once the Server has started, navigate to http://localhost:4848/ to open the GlassFish Console.
+		- Once the Server has started, navigate to http://localhost:4848/ to open the Payara Console.
 
-		- In GlassFish Admin Console, expand "Resources" and select "Connection Factories" under "JMS Resources". Add a new ConnectionFactory resource named "OperationQueueConnectionFactory".
+		- In Payara Admin Console, expand "Resources" and select "Connection Factories" under "JMS Resources". Add a new ConnectionFactory resource named "OperationQueueConnectionFactory".
 
 		- Under "JMS Resources", select "Destination Resources" and add a new Queue resource named "OperationQueue".
 
 **b)** JDBC Configuration
 
- - To configure the database connectivity for the application, remain in the GlassFish Console to perform the next steps.
+ - To configure the database connectivity for the application, remain in the Payara Console to perform the next steps.
 
 		- Expand the "Resources" node in the Common Tasks menu and select "JDBC Connection Pools" within the "JDBC" menu option.
 		 
 		- Click "New..." to create a new connection pool.
 		 
-		- In the "New JDBC Connection Pool" page, enter "MySQLConnPool" for the new pool name, "javax.sql.DataSource" as the resource type, and "MySql" as the database driver vendor.  Click "Next".
+		- In the "New JDBC Connection Pool" page, enter "StockSearchPool" for the new pool name, "javax.sql.DataSource" as the resource type, and "MySql" as the database driver vendor.  Click "Next".
 		 
 		- Accept all default values by clicking "Finish".
 		 
@@ -102,9 +106,9 @@ https://netbeans.org/downloads/
 	| ------ | ----- |
 	| serverName  | localhost |
 	| portNumber  | 3306  |
-	| databaseName  | geolocations  |
-	| user  | geolocations_db_user  |
-	| password  | 9vW00q24CTy@(zl}  |
+	| databaseName  | stock_search  |
+	| user  | stock_search_db_user  |
+	| password  | 7r6H5fq}dD98!@x  |
 		
 		- Click on "Save" to save the new properties
 		
@@ -114,7 +118,7 @@ https://netbeans.org/downloads/
 		
 		- Click "New..." to create a new JDBC resource.
 		
-		- Enter "jdbc/geolocations" for the JNDI Name and select "MySQLConnPool" for the Pool Name.
+		- Enter "jdbc/stockSearch" for the JNDI Name and select "StockSearchPool" for the Pool Name.
 		
 		- Click "OK" to save the new resource.
 
@@ -133,8 +137,8 @@ https://netbeans.org/downloads/
 	| Name  | Value |
 	| ------ | ----- |
 	| JAAS Context  | jdbcRealm |
-	| JNDI  | jdbc/geolocations  |
-	| User Table  | GeolocationsUser  |
+	| JNDI  | jdbc/stockSearch  |
+	| User Table  | OperationMonitorUser  |
 	| User Name Column  | username  |
 	| Password Column  | password  |
 	| Group Table  | UserRole |
@@ -151,8 +155,12 @@ https://netbeans.org/downloads/
   <figcaption>Figure 4. JDBC Realm</figcaption>
 </figure><br>
 <br>
+
+**d)** API Key
+
+ - To configure the World Trading Data API key for usage by the applications, navigate to the server page in the admin console, select the "Properties" tab and "System Properties" sub-tab, and add your key with the name, "world\_trading\_api\_token".
 	
- - After this procedure, exit GlassFish Console and shut down the server in NetBeans.
+ - After this procedure, exit Payara Console and shut down the server.
 
 ### Section D - build application
 
@@ -160,9 +168,9 @@ These applications are built with Maven, so all JAR dependecies are specified in
 
 ### Section E - deploy application
 
-**a)** These applications can be run on the GlassFish Server from within the NetBeans IDE by  right-clicking the EAR project node and selecting "Run".
+**a)** Once created in the target directory, the EAR file can be deployed to the Payara server on the "Applications" page of the admin console.
 
-**b)** View the Operation Monitor application by pointing the web browser to https://localhost:8181/OperationMonitor-web for a connection with SSL/TLS implemented.  Otherwise, comment out the web module security constraint in /WEB-INF/web.xml and point the browser to http://localhost:8080/OperationMonitor-web. The applications, GeoLocator and GeoTracer, do not have this security constraint.
+**b)** View the Operation Monitor application by pointing the web browser to https://localhost:8181/OperationMonitor-web for a connection with SSL/TLS implemented.  Otherwise, comment out the web module security constraint in /WEB-INF/web.xml and point the browser to http://localhost:8080/OperationMonitor-web. The application, StocksClient, does not have this security constraint.
 	
 
 ### Section F - notes

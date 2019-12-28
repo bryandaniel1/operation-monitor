@@ -1,5 +1,5 @@
 /* 
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package com.daniel.opmonitor.ejb;
 
-import com.daniel.search.GeolocationSearchEventResult;
-import com.daniel.search.GeotracerEventResult;
-import com.fasterxml.jackson.core.JsonParser;
+import com.daniel.search.history.HistoricalStockPriceSearchEvent;
+import com.daniel.search.price.StockPriceSearchEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.text.MessageFormat;
 import javax.ejb.ActivationConfigProperty;
@@ -47,18 +47,28 @@ import org.apache.log4j.Logger;
 public class OperationMessageListener implements MessageListener {
 
     /**
-     * The geographic location service
+     * The stock search data service
      */
     @EJB
-    private GeolocationService geolocationService;
-    
+    private StockSearchService stockSearchService;
+
     /**
      * The logger for this class
      */
     private final Logger logger = LogManager.getLogger(OperationMessageListener.class);
 
     /**
-     * This method uses the geolocation service to convert messages from the
+     * The name of the stock price history node within the message
+     */
+    private final String HISTORY_NODE = "stock_history_search_result";
+
+    /**
+     * The name of the stock price search node within the message
+     */
+    private final String PRICE_NODE = "stock_price_search_result";
+
+    /**
+     * This method uses the stock search service to convert messages from the
      * operation queue into entities to be stored in the database. If the
      * message is of an unknown type, the message is logged and the service is
      * not invoked.
@@ -70,33 +80,28 @@ public class OperationMessageListener implements MessageListener {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);            
+            mapper.registerModule(new JavaTimeModule());
             String messageString = message.getBody(String.class);
 
             /*
              * Retrieving nodes from the JSON string to determine which type to 
              * accept
              */
-            Object json = mapper.readValue(messageString, Object.class);
             JsonNode rootNode = mapper.readTree(messageString);
-            JsonNode hopsNode = rootNode.path("hops");
+            JsonNode historyNode = rootNode.path(HISTORY_NODE);
 
-            if (!hopsNode.isMissingNode()) {
-                GeotracerEventResult geotracerEventResult = mapper.convertValue(json,
-                        GeotracerEventResult.class);
-                geolocationService.storeGeotracerEvent(geotracerEventResult);
+            if (!historyNode.isMissingNode()) {
+                HistoricalStockPriceSearchEvent historicalStockPriceSearchEvent = mapper.readValue(messageString,
+                        HistoricalStockPriceSearchEvent.class);
+                stockSearchService.storeHistoricalStockPriceSearchEvent(historicalStockPriceSearchEvent);
             } else {
-                JsonNode geolocationNode = rootNode.path("geolocation");
-                if (!geolocationNode.isMissingNode()) {
-                    logger.info(MessageFormat.format("Message received:\n{0}", mapper.writerWithDefaultPrettyPrinter()
-                            .writeValueAsString(json)));
-                    GeolocationSearchEventResult geolocationSearchEventResult
-                            = mapper.convertValue(json, GeolocationSearchEventResult.class);
-                    geolocationService.storeGeolocationSearchEvent(geolocationSearchEventResult);
+                JsonNode dataNode = rootNode.path(PRICE_NODE);
+                if (!dataNode.isMissingNode()) {
+                    StockPriceSearchEvent stockPriceSearchEvent = mapper.readValue(messageString, StockPriceSearchEvent.class);
+                    stockSearchService.storeStockPriceSearchEvent(stockPriceSearchEvent);
                 } else {
                     logger.info(MessageFormat.format("Unknown message received from the queue:\n{0}",
-                            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json)));
+                            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(messageString)));
                 }
             }
         } catch (JMSException | JsonProcessingException ex) {

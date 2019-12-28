@@ -7,51 +7,131 @@
     <ui:define name="content" >
         <section id="formSection" class="ui-widget-header">
             <h2 id="searchHeader">Operation Monitor</h2>
-            <input type="hidden" id="searchEventLocation" value="#{detailsBean.searchLocationString}" />
-            <input type="hidden" id="hopLocations" value="#{detailsBean.hopLocationsString}" />
             <h:form>
                 <h:commandLink action="index">Back to search results</h:commandLink>                            
             </h:form>
-        </section>        
-        <section id="mapSection">
-            <h3>Map</h3>
-            <div id="map" style="height: 500px; width:100%; position:absolute"></div>
         </section>
-        <div style="height: 500px; float: left"></div>
         <div id="message"></div>
         <section id="dataSection">
-            <h3>Data</h3>
-            <c:if test="#{not empty detailsBean.selectedSearchEvent}">
-                <div class="dataNames">
-                    <div class="ipAddressLabel">IP address:&#160;</div>
-                    <div class="countryCodeLabel">Country Code:&#160;</div>
-                    <div class="countryNameLabel">Country Name:&#160;</div>
-                    <div class="regionCodeLabel">Region Code:&#160;</div>
-                    <div class="regionNameLabel">Region Name:&#160;</div>
-                    <div class="cityLabel">City:&#160;</div>
-                    <div class="zipCodeLabel">Zip Code:&#160;</div>
-                    <div class="timeZoneLabel">Time Zone:&#160;</div>
-                    <div class="latitudeLabel">Latitude:&#160;</div>
-                    <div class="longitudeLabel">Longitude:&#160;</div>
-                    <div class="metroCodeLabel">Metro Code:&#160;</div>
-                </div>
-                <div class="dataValues">
-                    <div class="ipAddressDiv"></div>
-                    <div class="countryCodeDiv"></div>
-                    <div class="countryNameDiv"></div>
-                    <div class="regionCodeDiv"></div>
-                    <div class="regionNameDiv"></div>
-                    <div class="cityDiv"></div>
-                    <div class="zipCodeDiv"></div>
-                    <div class="timeZoneDiv"></div>
-                    <div class="latitudeDiv"></div>
-                    <div class="longitudeDiv"></div>
-                    <div class="metroCodeDiv"></div>
-                </div>
-            </c:if>
-            <c:if test="#{not empty detailsBean.selectedTracerEvent}">
-                <div id="dataAccordion"></div>
-            </c:if>
+            <h3>Stock Search Data</h3>
+            <h:panelGroup styleClass="ui-widget-content" rendered="#{not empty detailsBean.selectedStockPriceSearchEvent}">
+                <table id="selectedStockPriceSearchEventTable" class="eventTable">
+                    <tr>
+                        <th>Symbol:</th>
+                        <td><h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.symbol.symbol}"/></td>
+                    </tr>
+                    <tr>
+                        <th>Search Date:</th>
+                        <td>
+                            <h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.searchDateTime}">
+                                <f:convertDateTime dateStyle="full" pattern="yyyy-MM-dd"/>
+                            </h:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Price:</th>
+                        <td>
+                            <h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.price}">
+                                <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                            </h:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Close Yesterday:</th>
+                        <td>
+                            <h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.closeYesterday}">
+                                <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                            </h:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Change Percent:</th>
+                        <td><h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.changePct}"/></td>
+                    </tr>
+                    <tr>
+                        <th>Day High:</th>
+                        <td>
+                            <h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.dayHigh}">
+                                <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                            </h:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Day Low:</th>
+                        <td>
+                            <h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.dayLow}">
+                                <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                            </h:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Price Open:</th>
+                        <td>
+                            <h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.priceOpen}">
+                                <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                            </h:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Shares:</th>
+                        <td><h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.shares}"/></td>
+                    </tr>
+                    <tr>
+                        <th>Market Cap:</th>
+                        <td><h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.marketCap}"/></td>
+                    </tr>
+                    <tr>
+                        <th>Stock Exchange Long:</th>
+                        <td><h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.stockExchangeLong}"/></td>
+                    </tr>
+                    <tr>
+                        <th>Stock Exchange Short:</th>
+                        <td><h:outputText value="#{detailsBean.selectedStockPriceSearchEvent.stockExchangeShort}"/></td>
+                    </tr>
+                </table>
+            </h:panelGroup>
+            <h:panelGroup styleClass="ui-widget-content" rendered="#{not empty detailsBean.selectedStockHistorySearchEvent}">
+                <h:dataTable id="historyEventTable" styleClass="eventTable display responsive" width="100%" value="#{detailsBean.historyResults}" var="historyResult">
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Stock Symbol" styleClass="dataTableHeader"/></f:facet>
+                        <h:outputText value="${historyResult.stock.symbol}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Date" styleClass="dataTableHeader"/></f:facet>
+                        <h:outputText value="${historyResult.stockHistoryResultPK.historyDate}">
+                            <f:convertDateTime dateStyle="full" pattern="yyyy-MM-dd"/>
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Opening Price" styleClass="dataTableHeader"/></f:facet>
+                        <h:outputText value="${historyResult.open}">
+                            <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Closing Price" styleClass="dataTableHeader"/></f:facet>
+                        <h:outputText value="${historyResult.close}">
+                            <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Day High" styleClass="dataTableHeader"/></f:facet>
+                        <h:outputText value="${historyResult.high}">
+                            <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Day Low" styleClass="dataTableHeader"/></f:facet>
+                        <h:outputText value="${historyResult.low}">
+                            <f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Volume" styleClass="dataTableHeader"/></f:facet>
+                        <h:outputText value="${historyResult.volume}"/>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
         </section>        
     </ui:define>
 </ui:composition>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,9 @@
  */
 package com.daniel.opmonitor.web;
 
-import com.daniel.opmonitor.entity.Geolocation;
-import com.daniel.opmonitor.entity.GeolocationSearchEvent;
-import com.daniel.opmonitor.entity.GeotracerEvent;
-import com.daniel.opmonitor.entity.TracerHop;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.daniel.opmonitor.entity.StockHistoryResult;
+import com.daniel.opmonitor.entity.StockHistorySearch;
+import com.daniel.opmonitor.entity.StockPriceSearch;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -45,34 +42,29 @@ public class DetailsBean implements Serializable {
     private static final long serialVersionUID = 2829701574790099787L;
 
     /**
-     * The logger for this class
+     * The selected stock price data search event
      */
-    private final Logger logger = LogManager.getLogger(DetailsBean.class);
+    private StockPriceSearch selectedStockPriceSearchEvent;
 
     /**
-     * The selected geographic data search event
+     * The stock history search event
      */
-    private GeolocationSearchEvent selectedSearchEvent;
+    private StockHistorySearch selectedStockHistorySearchEvent;
 
     /**
-     * The selected trace route event
+     * The days for the selected stock history search event
      */
-    private GeotracerEvent selectedTracerEvent;
+    private List<StockHistoryResult> historyResults;
 
     /**
-     * The hop locations for the selected tracer event
-     */
-    private List<Geolocation> hopLocations;
-
-    /**
-     * This method clears any stored tracer event and returns the details page
-     * target.
+     * This method clears any stored history search event and returns the
+     * details page target.
      *
      * @return the target for the details page
      */
     public String viewSearchEvent() {
-        setSelectedTracerEvent(null);
-        setHopLocations(null);
+        setSelectedStockHistorySearchEvent(null);
+        setHistoryResults(null);
         return "/monitor/details";
     }
 
@@ -82,105 +74,69 @@ public class DetailsBean implements Serializable {
      *
      * @return the target for the details page
      */
-    public String viewTracerEvent() {
-        setSelectedSearchEvent(null);
-        hopLocations = new ArrayList<>();       
-        
-        for (TracerHop hop : selectedTracerEvent.getTracerHopList()) {
-            if (hop.getHopSearch() != null){
-                hopLocations.add(hop.getHopSearch().getSearch().getLocation());
-            }
-        }
+    public String viewHistorySearchEvent() {
+        setSelectedStockPriceSearchEvent(null);
+        historyResults = new ArrayList<>();
+
+        selectedStockHistorySearchEvent.getStockHistoryResultList().forEach((result) -> {
+            historyResults.add(result);
+        });
         return "/monitor/details";
     }
 
     /**
-     * Get the value of selectedSearchEvent
+     * Get the value of selectedStockPriceSearchEvent
      *
-     * @return the value of selectedSearchEvent
+     * @return the value of selectedStockPriceSearchEvent
      */
-    public GeolocationSearchEvent getSelectedSearchEvent() {
-        return selectedSearchEvent;
+    public StockPriceSearch getSelectedStockPriceSearchEvent() {
+        return selectedStockPriceSearchEvent;
     }
 
     /**
-     * Set the value of selectedSearchEvent
+     * Set the value of selectedStockPriceSearchEvent
      *
-     * @param selectedSearchEvent new value of selectedSearchEvent
+     * @param selectedStockPriceSearchEvent new value of
+     * selectedStockPriceSearchEvent
      */
-    public void setSelectedSearchEvent(GeolocationSearchEvent selectedSearchEvent) {
-        this.selectedSearchEvent = selectedSearchEvent;
+    public void setSelectedStockPriceSearchEvent(StockPriceSearch selectedStockPriceSearchEvent) {
+        this.selectedStockPriceSearchEvent = selectedStockPriceSearchEvent;
     }
 
     /**
-     * Get the value of selectedTracerEvent
+     * Get the value of selectedStockHistorySearchEvent
      *
-     * @return the value of selectedTracerEvent
+     * @return the value of selectedStockHistorySearchEvent
      */
-    public GeotracerEvent getSelectedTracerEvent() {
-        return selectedTracerEvent;
+    public StockHistorySearch getSelectedStockHistorySearchEvent() {
+        return selectedStockHistorySearchEvent;
     }
 
     /**
-     * Set the value of selectedTracerEvent
+     * Set the value of selectedStockHistorySearchEvent
      *
-     * @param selectedTracerEvent new value of selectedTracerEvent
+     * @param selectedStockHistorySearchEvent new value of
+     * selectedStockHistorySearchEvent
      */
-    public void setSelectedTracerEvent(GeotracerEvent selectedTracerEvent) {
-        this.selectedTracerEvent = selectedTracerEvent;
+    public void setSelectedStockHistorySearchEvent(StockHistorySearch selectedStockHistorySearchEvent) {
+        this.selectedStockHistorySearchEvent = selectedStockHistorySearchEvent;
     }
 
     /**
-     * Get the value of hopLocations
+     * Get the value of historyResults
      *
-     * @return the value of hopLocations
+     * @return the value of historyResults
      */
-    public List<Geolocation> getHopLocations() {
-        return hopLocations;
+    public List<StockHistoryResult> getHistoryResults() {
+        return historyResults;
     }
 
     /**
-     * Set the value of hopLocations
+     * Set the value of historyResults
      *
-     * @param hopLocations new value of hopLocations
+     * @param historyResults new value of historyResults
      */
-    public void setHopLocations(List<Geolocation> hopLocations) {
-        this.hopLocations = hopLocations;
-    }
-    
-    /**
-     * This method returns the selected search location as a JSON string.
-     *
-     * @return the selected search location as a string
-     */
-    public String getSearchLocationString(){
-        
-        String searchLocationString = null;
-        if (selectedSearchEvent != null) {
-            try {
-                searchLocationString = new ObjectMapper().writeValueAsString(selectedSearchEvent.getLocation());
-            } catch (JsonProcessingException ex) {
-                logger.error("An exception occurred in the getSearchLocationString method.", ex);
-            }
-        }
-        return searchLocationString;
-    }
-
-    /**
-     * This method returns the hop locations as a JSON string.
-     *
-     * @return the hop locations as a string
-     */
-    public String getHopLocationsString() {
-
-        String tracerString = null;
-        if (hopLocations != null) {
-            try {
-                tracerString = new ObjectMapper().writeValueAsString(hopLocations);
-            } catch (JsonProcessingException ex) {
-                logger.error("An exception occurred in the getTracerString method.", ex);
-            }
-        }
-        return tracerString;
+    public void setHistoryResults(List<StockHistoryResult> historyResults) {
+        this.historyResults = historyResults;
     }
 }

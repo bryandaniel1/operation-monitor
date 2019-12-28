@@ -59,9 +59,6 @@ public class Country implements Serializable {
     private String countryName;
     @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
-    private List<Geolocation> geolocationList;
-    @JsonBackReference
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
     private List<UserContact> userContactList;
 
     /**
@@ -124,25 +121,6 @@ public class Country implements Serializable {
      */
     public void setCountryName(String countryName) {
         this.countryName = countryName;
-    }
-
-    /**
-     * Gets the value of geolocationList
-     *
-     * @return the value of geolocationList
-     */
-    @XmlTransient
-    public List<Geolocation> getGeolocationList() {
-        return geolocationList;
-    }
-
-    /**
-     * Sets the value of geolocationList
-     *
-     * @param geolocationList the value of geolocationList
-     */
-    public void setGeolocationList(List<Geolocation> geolocationList) {
-        this.geolocationList = geolocationList;
     }
 
     /**

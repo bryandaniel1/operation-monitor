@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package com.daniel.opmonitor.web;
 
-import com.daniel.opmonitor.ejb.GeolocationService;
-import com.daniel.opmonitor.entity.GeolocationSearchEvent;
-import com.daniel.opmonitor.entity.GeotracerEvent;
+import com.daniel.opmonitor.ejb.StockSearchService;
+import com.daniel.opmonitor.entity.StockHistorySearch;
+import com.daniel.opmonitor.entity.StockPriceSearch;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -45,8 +45,8 @@ public class MonitorBean implements Serializable {
      * The event types
      */
     public enum EventType {
-        SEARCH("Search"),
-        TRACER("Tracer");
+        SEARCH("Stock Price Search"),
+        HISTORY("Stock History Search");
 
         /**
          * The event type label
@@ -83,20 +83,20 @@ public class MonitorBean implements Serializable {
     private final Logger logger = LogManager.getLogger(MonitorBean.class);
 
     /**
-     * The geolocation service
+     * The stock search data service
      */
     @EJB
-    private GeolocationService geolocationService;
+    private StockSearchService stockSearchService;
 
     /**
-     * The geolocation search event
+     * The list of stock price search events
      */
-    private List<GeolocationSearchEvent> geolocationSearchEvents;
+    private List<StockPriceSearch> stockPriceSearchEvents;
 
     /**
-     * The list of tracer events
+     * The list of stock history search events
      */
-    private List<GeotracerEvent> geotracerEvents;
+    private List<StockHistorySearch> stockHistorySearchEvents;
 
     /**
      * The selected event type
@@ -113,21 +113,21 @@ public class MonitorBean implements Serializable {
      */
     public void search() {
 
-        setGeolocationSearchEvents(null);
-        setGeotracerEvents(null);
+        setStockPriceSearchEvents(null);
+        setStockHistorySearchEvents(null);
         switch (selectedEventType) {
             case SEARCH:
-                findGeolocationSearchEvents();
-                if (getGeolocationSearchEvents() == null || getGeolocationSearchEvents().isEmpty()) {
-                    FacesMessage message = new FacesMessage("No geolocation search events were found for the selected date.");
+                findStockPriceSearchEvents();
+                if (getStockPriceSearchEvents() == null || getStockPriceSearchEvents().isEmpty()) {
+                    FacesMessage message = new FacesMessage("No stock price searches were found for the selected date.");
                     message.setSeverity(FacesMessage.SEVERITY_ERROR);
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
                 break;
-            case TRACER:
-                findGeotracerEvents();
-                if (getGeotracerEvents() == null || getGeotracerEvents().isEmpty()) {
-                    FacesMessage message = new FacesMessage("No geotracer events were found for the selected date.");
+            case HISTORY:
+                findStockHistorySearchEvents();
+                if (getStockHistorySearchEvents() == null || getStockHistorySearchEvents().isEmpty()) {
+                    FacesMessage message = new FacesMessage("No stock price history searches were found for the selected date.");
                     message.setSeverity(FacesMessage.SEVERITY_ERROR);
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
@@ -138,17 +138,17 @@ public class MonitorBean implements Serializable {
     }
 
     /**
-     * This method finds all geolocation search events for the selected date
+     * This method finds all stock price search events for the selected date.
      */
-    public void findGeolocationSearchEvents() {
-        setGeolocationSearchEvents(geolocationService.findGeolocationSearchEvents(selectedDate));
+    public void findStockPriceSearchEvents() {
+        setStockPriceSearchEvents(stockSearchService.findStockPriceSearchEvents(selectedDate));
     }
 
     /**
-     * This method finds all geotracer events for the selected date
+     * This method finds all stock history events for the selected date.
      */
-    public void findGeotracerEvents() {
-        setGeotracerEvents(geolocationService.findGeotracerEvents(selectedDate));
+    public void findStockHistorySearchEvents() {
+        setStockHistorySearchEvents(stockSearchService.findStockHistorySearchEvents(selectedDate));
     }
 
     /**
@@ -178,39 +178,39 @@ public class MonitorBean implements Serializable {
     }
 
     /**
-     * Get the value of geolocationSearchEvents
+     * Get the value of stockPriceSearchEvents
      *
-     * @return the value of geolocationSearchEvents
+     * @return the value of stockPriceSearchEvents
      */
-    public List<GeolocationSearchEvent> getGeolocationSearchEvents() {
-        return geolocationSearchEvents;
+    public List<StockPriceSearch> getStockPriceSearchEvents() {
+        return stockPriceSearchEvents;
     }
 
     /**
-     * Set the value of geolocationSearchEvents
+     * Set the value of stockPriceSearchEvents
      *
-     * @param geolocationSearchEvents new value of geolocationSearchEvents
+     * @param stockPriceSearchEvents new value of stockPriceSearchEvents
      */
-    public void setGeolocationSearchEvents(List<GeolocationSearchEvent> geolocationSearchEvents) {
-        this.geolocationSearchEvents = geolocationSearchEvents;
+    public void setStockPriceSearchEvents(List<StockPriceSearch> stockPriceSearchEvents) {
+        this.stockPriceSearchEvents = stockPriceSearchEvents;
     }
 
     /**
-     * Get the value of geotracerEvents
+     * Get the value of stockHistorySearchEvents
      *
-     * @return the value of geotracerEvents
+     * @return the value of stockHistorySearchEvents
      */
-    public List<GeotracerEvent> getGeotracerEvents() {
-        return geotracerEvents;
+    public List<StockHistorySearch> getStockHistorySearchEvents() {
+        return stockHistorySearchEvents;
     }
 
     /**
-     * Set the value of geotracerEvents
+     * Set the value of stockHistorySearchEvents
      *
-     * @param geotracerEvents new value of geotracerEvents
+     * @param stockHistorySearchEvents new value of stockHistorySearchEvents
      */
-    public void setGeotracerEvents(List<GeotracerEvent> geotracerEvents) {
-        this.geotracerEvents = geotracerEvents;
+    public void setStockHistorySearchEvents(List<StockHistorySearch> stockHistorySearchEvents) {
+        this.stockHistorySearchEvents = stockHistorySearchEvents;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package com.daniel.opmonitor.ejb;
 
-import com.daniel.opmonitor.entity.GeolocationsUser;
+import com.daniel.opmonitor.entity.OperationMonitorUser;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -27,6 +27,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 /**
+ * This UserService implementation provides functionality for accessing and
+ * managing data of OperationMonitor users.
  *
  * @author Bryan Daniel
  */
@@ -63,7 +65,7 @@ public class SimpleUserService implements UserService {
     @Override
     public String findUserSalt(String username) {
 
-        GeolocationsUser user = findGeolocationsUser(username);
+        OperationMonitorUser user = findOperationMonitorUser(username);
         if (user != null) {
             String hash = user.getPassword();
             if (hash == null || hash.length() < SALT_END_INDEX) {
@@ -77,38 +79,38 @@ public class SimpleUserService implements UserService {
     }
 
     /**
-     * This method finds the geolocations user associated with the given
+     * This method finds the Operation Monitor user associated with the given
      * username.
      *
      * @param username the username
      * @return the user entity or null if no user is found
      */
     @Override
-    public GeolocationsUser findGeolocationsUser(String username) {
+    public OperationMonitorUser findOperationMonitorUser(String username) {
 
-        Query query = entityManager.createNamedQuery("GeolocationsUser.findByUsername");
-        GeolocationsUser user = null;
+        Query query = entityManager.createNamedQuery("OperationMonitorUser.findByUsername");
+        OperationMonitorUser user = null;
         try {
-            user = (GeolocationsUser) query.setParameter("username", username).getSingleResult();
+            user = (OperationMonitorUser) query.setParameter("username", username).getSingleResult();
         } catch (NoResultException nre) {
             logger.info(MessageFormat.format("No user could be found with the username, {0}.", username));
         } catch (Exception e) {
-            logger.error("SimpleUserService: An exception occurred in the findGeolocationsUser method.", e);
+            logger.error("SimpleUserService: An exception occurred in the findOperationMonitorUser method.", e);
         }
         return user;
     }
 
     /**
-     * This method collects all users of the geolocations database and returns
+     * This method collects all users of the stock search database and returns
      * them as a list.
      *
      * @return the list of all users
      */
     @Override
-    public List<GeolocationsUser> findAllUsers() {
+    public List<OperationMonitorUser> findAllUsers() {
 
-        Query query = entityManager.createNamedQuery("GeolocationsUser.findAll");
-        List<GeolocationsUser> users = null;
+        Query query = entityManager.createNamedQuery("OperationMonitorUser.findAll");
+        List<OperationMonitorUser> users = null;
         try {
             users = query.getResultList();
         } catch (Exception e) {

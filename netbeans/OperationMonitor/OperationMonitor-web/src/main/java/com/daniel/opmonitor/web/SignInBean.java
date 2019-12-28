@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,8 +92,8 @@ public class SignInBean implements Serializable {
                 request.login(username, passwordHashed);
                 if (request.getUserPrincipal() != null) {
                     if (request.isUserInRole(USER_ROLE) || request.isUserInRole(ADMINISTRATOR_ROLE)) {
-                        externalContext.getSessionMap().put("user", 
-                                userService.findGeolocationsUser(username));
+                        externalContext.getSessionMap().put("user",
+                                userService.findOperationMonitorUser(username));
                         return "/monitor/index?faces-redirect=true&includeViewParams=true";
                     } else {
                         context.addMessage(null, new FacesMessage("You are not authorized to use the operation monitor."));

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Stock Price Client</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous"/>
+        <link href="main.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
+        <script type="application/javascript" src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    </head>
+    <body>        
+        <section id="formSection" class="ui-widget-header">
+            <h2 id="searchHeader">Stocks Client</h2>
+            <form id="stockPriceForm" method="POST">
+                <label for="symbol">Enter Stock Symbol:</label>
+                <input type="text" name="stockSymbol" id="symbol"/>
+                <input id="submitButton" type="submit" name="submit" value="submit" />
+            </form>
+        </section>
+        <div id="message"></div>
+        <div id="dataDiv"></div>
+        <div id="chartDiv"></div>
+        <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+        <script type="text/babel" src="component/StockDisplay.jsx"></script>
+        <script type="text/babel" src="component/HistoryDisplay.jsx"></script>
+        <script type="text/babel" src="main.js"></script>
+    </body>
+</html>

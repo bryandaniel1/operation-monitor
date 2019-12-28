@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ public class UserContact implements Serializable {
     private String zipCode;
     @JoinColumn(name = "username", referencedColumnName = "username", insertable = false, updatable = false)
     @OneToOne(optional = false)
-    private GeolocationsUser geolocationsUser;
+    private OperationMonitorUser operationMonitorUser;
     @JsonManagedReference
     @JoinColumn(name = "region", referencedColumnName = "region_code")
     @ManyToOne(optional = false)
@@ -81,7 +81,7 @@ public class UserContact implements Serializable {
     @JoinColumn(name = "country", referencedColumnName = "country_code")
     @ManyToOne(optional = false)
     private Country country;
-    
+
     /**
      * Default constructor
      */
@@ -185,21 +185,21 @@ public class UserContact implements Serializable {
     }
 
     /**
-     * Gets the value of geolocationsUser
+     * Gets the value of operationMonitorUser
      *
-     * @return the value of geolocationsUser
+     * @return the value of operationMonitorUser
      */
-    public GeolocationsUser getGeolocationsUser() {
-        return geolocationsUser;
+    public OperationMonitorUser getOperationMonitorUser() {
+        return operationMonitorUser;
     }
 
     /**
-     * Sets the value of geolocationsUser
+     * Sets the value of operationMonitorUser
      *
-     * @param geolocationsUser the value of geolocationsUser
+     * @param operationMonitorUser the value of operationMonitorUser
      */
-    public void setGeolocationsUser(GeolocationsUser geolocationsUser) {
-        this.geolocationsUser = geolocationsUser;
+    public void setOperationMonitorUser(OperationMonitorUser operationMonitorUser) {
+        this.operationMonitorUser = operationMonitorUser;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Bryan Daniel.
+ * Copyright 2019 Bryan Daniel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.daniel.opmonitor.web;
 
 import com.daniel.opmonitor.ejb.UserService;
-import com.daniel.opmonitor.entity.GeolocationsUser;
+import com.daniel.opmonitor.entity.OperationMonitorUser;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -53,9 +53,9 @@ public class AdministratorBean implements Serializable {
     private MonitorBean monitorBean;
 
     /**
-     * The users of the geolocations database
+     * The users of the stock search database
      */
-    private List<GeolocationsUser> users;
+    private List<OperationMonitorUser> users;
 
     /**
      * This method is executed after construction to set the value for the list
@@ -89,7 +89,7 @@ public class AdministratorBean implements Serializable {
      *
      * @return the value of users
      */
-    public List<GeolocationsUser> getUsers() {
+    public List<OperationMonitorUser> getUsers() {
         return users;
     }
 
@@ -98,7 +98,7 @@ public class AdministratorBean implements Serializable {
      *
      * @param users new value of users
      */
-    public void setUsers(List<GeolocationsUser> users) {
+    public void setUsers(List<OperationMonitorUser> users) {
         this.users = users;
     }
 }
