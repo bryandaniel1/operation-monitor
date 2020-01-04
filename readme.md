@@ -22,7 +22,7 @@ This set of enterprise applications provides example usages of web services and 
 
 ## Purpose
 
-The purpose of this repository is to provide example implementations of various technologies in Java.  The source code may also be a reference for JQuery and MySQL statements as these languages were also used in the development of these applications.  Some of the technologies used in the source code are listed below.
+The purpose of this repository is to provide example implementations of various technologies in Java.  The source code may also be a reference for JQuery, ReactJS, and MySQL as these technologies were also used in the development of these applications.  Some of the Java technologies used in the source code are listed below.
 
 	a) Java Server Faces (JSF)
 	b) Enterprise Java Beans (EJB)

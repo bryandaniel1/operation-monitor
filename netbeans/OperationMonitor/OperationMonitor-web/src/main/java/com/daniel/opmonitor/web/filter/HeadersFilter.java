@@ -41,7 +41,7 @@ public class HeadersFilter implements Filter {
     /**
      * The debug indicator
      */
-    private static final boolean debug = true;
+    private static final boolean debug = false;
 
     /**
      * The filter configuration
