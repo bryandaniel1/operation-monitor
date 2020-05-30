@@ -109,6 +109,7 @@ https://www.payara.fish/software/downloads/
 	| databaseName  | stock_search  |
 	| user  | stock_search_db_user  |
 	| password  | 7r6H5fq}dD98!@x  |
+	| url  | jdbc:mysql://localhost:3306/stock_search?serverTimezone=UTC&verifyServerCertificate=false&useSSL=false  |
 		
 		- Click on "Save" to save the new properties
 		
